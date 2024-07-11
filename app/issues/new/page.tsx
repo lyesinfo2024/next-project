@@ -1,11 +1,14 @@
-import { Button, TextArea, TextField } from "@radix-ui/themes";
+"use client";
+import { Button, TextField } from "@radix-ui/themes";
+import SimpleMDE from "react-simplemde-editor";
+import "easymde/dist/easymde.min.css";
 
 import { CiSearch } from "react-icons/ci";
 const NewIssuePage = () => {
   return (
     <div className="space-y-3 max-w-xl">
       <TextField.Root placeholder="Search the docs…" />
-      <TextArea placeholder="Description" size="3" />
+      <SimpleMDE placeholder="Description" />
       <Button>Submit Issue</Button>
     </div>
   );
