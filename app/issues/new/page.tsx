@@ -27,6 +27,17 @@ const NewIssuePage = () => {
   const router = useRouter();
   const [error, setError] = useState("");
   const [isSubmiting, setSubmiting] = useState(false);
+
+  const onSubmit = handleSubmit(async (data) => {
+    try {
+      setSubmiting(true);
+      await axios.post("/api/issues", data);
+      router.push("/issues");
+    } catch (error) {
+      setSubmiting(false);
+      setError("An unexpected error has occured!");
+    }
+  });
   return (
     <div className="max-w-xl ">
       {error && (
@@ -37,31 +48,7 @@ const NewIssuePage = () => {
           <Callout.Text>{error}</Callout.Text>
         </Callout.Root>
       )}
-      <form
-        className="space-y-3 "
-        onSubmit={handleSubmit(async (data) => {
-          // 1 ======> ************** use axios methde ********************
-
-          try {
-            setSubmiting(true);
-            await axios.post("/api/issues", data);
-            router.push("/issues");
-          } catch (error) {
-            setSubmiting(false);
-            setError("An unexpected error has occured!");
-          }
-
-          // 2 ======> ************** use fetch methde ********************
-          // await fetch("/api/issues", {
-          //   method: "POST",
-          //   headers: {
-          //     "Content-Type": "application/json",
-          //   },
-          //   body: JSON.stringify(data),
-          // });
-          // router.push("/issues");
-        })}
-      >
+      <form className="space-y-3 " onSubmit={onSubmit}>
         <TextField.Root placeholder="title" {...register("title")} />
         <ErrorMessage>{errors.title?.message}</ErrorMessage>
         <Controller
