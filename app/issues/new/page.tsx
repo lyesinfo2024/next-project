@@ -11,6 +11,7 @@ import { useState } from "react";
 import { CiCircleInfo } from "react-icons/ci";
 import { createIssueSchema } from "@/app/validationSchemas";
 import ErrorMessage from "@/app/components/ErrorMessage";
+import Spinner from "@/app/components/spinner";
 
 type IssueForm = z.infer<typeof createIssueSchema>;
 
@@ -25,6 +26,7 @@ const NewIssuePage = () => {
   });
   const router = useRouter();
   const [error, setError] = useState("");
+  const [isSubmiting, setSubmiting] = useState(false);
   return (
     <div className="max-w-xl ">
       {error && (
@@ -41,9 +43,11 @@ const NewIssuePage = () => {
           // 1 ======> ************** use axios methde ********************
 
           try {
+            setSubmiting(true);
             await axios.post("/api/issues", data);
             router.push("/issues");
           } catch (error) {
+            setSubmiting(false);
             setError("An unexpected error has occured!");
           }
 
@@ -68,7 +72,9 @@ const NewIssuePage = () => {
           )}
         />
         <ErrorMessage>{errors.description?.message}</ErrorMessage>
-        <Button>Submit Issue</Button>
+        <Button disabled={isSubmiting}>
+          Submit Issue {isSubmiting && <Spinner />}
+        </Button>
       </form>
     </div>
   );
