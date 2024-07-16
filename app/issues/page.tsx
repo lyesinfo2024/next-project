@@ -1,13 +1,12 @@
 // "use client";
 import React from "react";
-
 import { Button, Table } from "@radix-ui/themes";
 import prisma from "@/prisma/client";
 import delay from "delay";
 import "react-loading-skeleton/dist/skeleton.css";
 import IssueStatusPage from "../components/issueStatusPage";
 import IssueActions from "./IssueActions";
-import Link from "next/link";
+import Link from "../components/Link";
 
 const IssuesPage = async () => {
   const issues = await prisma.issue.findMany();
@@ -44,14 +43,7 @@ const IssuesPage = async () => {
                 {issue.createdAt.toDateString()}
               </Table.Cell>
               <Table.Cell>
-                <Button>
-                  <Link
-                    href={`/issues/${issue.id}`}
-                    className=" cursor-pointer"
-                  >
-                    Show Details
-                  </Link>
-                </Button>
+                <Link href={`/issues/${issue.id}`}>Show Details</Link>
               </Table.Cell>
             </Table.Row>
           ))}
