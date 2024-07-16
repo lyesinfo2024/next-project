@@ -5,6 +5,7 @@ import React from "react";
 import delay from "delay";
 import { number } from "zod";
 import IssueStatusPage from "@/app/components/issueStatusPage";
+import ReactMarkdown from "react-markdown";
 
 interface Props {
   params: {
@@ -28,7 +29,9 @@ const IssueDetailPage = async ({ params: { id } }: Props) => {
         <IssueStatusPage status={issue.status} />
         <Text>{issue.createdAt.toDateString()}</Text>
       </Flex>
-      <Card className="max-w-xl">{issue.description}</Card>
+      <Card className="max-w-xl prose" mt="-4">
+        <ReactMarkdown>{issue.description}</ReactMarkdown>
+      </Card>
     </div>
   );
 };
