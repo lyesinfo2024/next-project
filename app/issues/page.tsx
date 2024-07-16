@@ -1,15 +1,16 @@
 // "use client";
 import React from "react";
 
-import { Table } from "@radix-ui/themes";
+import { Button, Table } from "@radix-ui/themes";
 import prisma from "@/prisma/client";
 import delay from "delay";
 import "react-loading-skeleton/dist/skeleton.css";
 import IssueStatusPage from "../components/issueStatusPage";
 import IssueActions from "./IssueActions";
+import Link from "next/link";
 
 const IssuesPage = async () => {
-  const users = await prisma.issue.findMany();
+  const issues = await prisma.issue.findMany();
   await delay(2000);
   return (
     <div>
@@ -24,13 +25,14 @@ const IssuesPage = async () => {
             <Table.ColumnHeaderCell className="hidden md:table-cell">
               update
             </Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell>show</Table.ColumnHeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {users.map((issue) => (
+          {issues.map((issue) => (
             <Table.Row key={issue.id}>
               <Table.Cell>
-                {issue.title}
+                <Link href={`/issues/${issue.id}`}>{issue.title}</Link>
                 <div className="md:hidden block">
                   <IssueStatusPage status={issue.status} />
                 </div>
@@ -40,6 +42,16 @@ const IssuesPage = async () => {
               </Table.Cell>
               <Table.Cell className="hidden md:table-cell">
                 {issue.createdAt.toDateString()}
+              </Table.Cell>
+              <Table.Cell>
+                <Button>
+                  <Link
+                    href={`/issues/${issue.id}`}
+                    className=" cursor-pointer"
+                  >
+                    Show Details
+                  </Link>
+                </Button>
               </Table.Cell>
             </Table.Row>
           ))}
