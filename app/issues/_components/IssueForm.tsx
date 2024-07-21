@@ -1,23 +1,19 @@
 "use client";
-import dynamic from "next/dynamic";
-import { Button, Callout, Text, TextArea, TextField } from "@radix-ui/themes";
-import "easymde/dist/easymde.min.css";
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import axios from "axios";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { CiCircleInfo } from "react-icons/ci";
-import { issueSchema } from "@/app/validationSchemas";
 import ErrorMessage from "@/app/components/ErrorMessage";
 import Spinner from "@/app/components/spinner";
-import delay from "delay";
+import { issueSchema } from "@/app/validationSchemas";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Issue } from "@prisma/client";
-
-const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
-  ssr: false,
-});
+import { Button, Callout, TextField } from "@radix-ui/themes";
+import axios from "axios";
+import delay from "delay";
+import "easymde/dist/easymde.min.css";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { CiCircleInfo } from "react-icons/ci";
+import SimpleMDE from "react-simplemde-editor";
+import { z } from "zod";
 
 type IssueFormData = z.infer<typeof issueSchema>;
 
@@ -38,8 +34,10 @@ const IssueForm = async ({ issue }: { issue?: Issue }) => {
   const onSubmit = handleSubmit(async (data) => {
     try {
       setSubmiting(true);
-      await axios.post("/api/issues", data);
+      if (issue) await axios.patch(`/api/issues/${issue.id}`, data);
+      else await axios.post("/api/issues", data);
       router.push("/issues");
+      router.refresh();
     } catch (error) {
       setSubmiting(false);
       setError("An unexpected error has occured!");
@@ -72,7 +70,7 @@ const IssueForm = async ({ issue }: { issue?: Issue }) => {
         />
         <ErrorMessage>{errors.description?.message}</ErrorMessage>
         <Button disabled={isSubmiting}>
-          Submit Issue {isSubmiting && <Spinner />}
+          {issue ? "update issue" : "Submit Issue"} {isSubmiting && <Spinner />}
         </Button>
       </form>
     </div>
