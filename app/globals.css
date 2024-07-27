@@ -25,3 +25,15 @@ body {
     )
     rgb(var(--background-start-rgb)); */
 }
+
+@layer utilities {
+  .nav-link {
+    @apply text-zinc-500 hover:text-zinc-900 transition-colors;
+  }
+}
+
+@layer utilities {
+  .spacial {
+    @apply bg-green-500;
+  }
+}
